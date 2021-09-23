@@ -8,10 +8,12 @@ You can find codegen's code [here](https://github.com/facebook/react-native/tree
 
 ## Usage
 
+Prerequisite: node version 12.17.0
+
 1. Clone this repository
 2. `cd codegen-tool`
 3. `yarn`
-4. `yarn gen-flow` for the flow schema or `yarn gen-ts` for the TypeScript schema(TS seems to be not supported for now)
+4. `yarn gen-flow MyModuleName` for the flow schema.
 5. if everything's ok, you'll be able to see the results in `generated` subdirectory
 
 ### Patch

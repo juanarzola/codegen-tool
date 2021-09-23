@@ -6,14 +6,15 @@
 import path from "path";
 
 import codeGen, { type TypeSystem } from "./CodeGen.js";
-import { exists } from "fs";
+import { exists, copyFile } from "fs";
+
+const typeSystem = process.argv[2];
+const moduleName = process.argv[3] || "people";
 
 const schemas = {
   ts: "./schema/typescriptSchema.ts",
-  flow: "./schema/flowSchema.js",
+  flow: `./schema/${moduleName}.js`,
 };
-
-const typeSystem = process.argv[2];
 
 if (!typeSystem) {
   throw new Error("ERROR: argument expected(flow/ts) but not found");
@@ -25,10 +26,15 @@ if (typeSystem !== "ts" && typeSystem !== "flow") {
 const schemaInPath = path.resolve(schemas[typeSystem]);
 const outPath = path.resolve("./generated");
 
-codeGen(
-  "people",
-  schemaInPath,
-  ["cpp", "h", "java", "jni_cpp", "jni_h"],
-  outPath,
-  (typeSystem: TypeSystem)
-);
+// File destination.txt will be created or overwritten by default.
+copyFile("./schema/flowSchema.js", `./schema/${moduleName}.js`, undefined, (err) => {
+  if (err) throw err;
+
+  codeGen(
+    moduleName,
+    schemaInPath,
+    ["cpp", "h", "java", "jni_cpp", "jni_h"],
+    outPath,
+    typeSystem
+  );  
+})
